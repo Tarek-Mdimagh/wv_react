@@ -13,6 +13,8 @@ import Stack from '@mui/material/Stack'
 import Chip from '@mui/material/Chip'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
+import { staticPosts } from '../../utils/fakePosts'
+import moment from 'moment'
 
 const CardStyle = styled(Card)`
   cursor: pointer;
@@ -24,42 +26,51 @@ const CardStyle = styled(Card)`
 `
 
 export default function RecipeReviewCard() {
+  const onePost = staticPosts.data[3]
   return (
-    <Link to="/details">
+    <Link to={`/details/${onePost.id}`}>
       <CardStyle sx={{ maxWidth: 345 }}>
         <CardHeader
           avatar={
             <Avatar
               sx={{ bgcolor: red[500] }}
               aria-label="recipe"
-            >
-              R
-            </Avatar>
+              src={onePost?.owner?.picture}
+            />
           }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
+          title={
+            onePost?.owner?.title +
+            ' , ' +
+            onePost?.owner?.firstName +
+            ' ' +
+            onePost?.owner?.lastName
+          }
+          // subheader="September 14, 2016"
+          subheader={
+            moment(onePost?.publishDate).isValid()
+              ? moment(onePost?.publishDate).format('LLL')
+              : ' '
+          }
         />
         <Stack
           direction="row"
           spacing={1}
           sx={{ padding: 2 }}
         >
-          <Chip
-            label="primary"
-            color="primary"
-            variant="outlined"
-          />
-          <Chip
-            label="success"
-            color="success"
-            variant="outlined"
-          />
+          {onePost?.tags?.map((tag, index) => (
+            <Chip
+              key={index}
+              label={tag}
+              color="primary"
+              variant="outlined"
+            />
+          ))}
         </Stack>
 
         <CardMedia
           component="img"
           height="194"
-          image="https://img.dummyapi.io/photo-1564694202779-bc908c327862.jpg"
+          image={onePost?.image}
           alt="Paella dish"
         />
         <CardContent>
@@ -67,15 +78,12 @@ export default function RecipeReviewCard() {
             variant="body2"
             color="text.secondary"
           >
-            This impressive paella is a perfect party dish
-            and a fun meal to cook together with your
-            guests. Add 1 cup of frozen peas along with the
-            mussels, if you like.
+            {onePost?.text}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label="liks">
-            <ThumbUpIcon /> 12
+            <ThumbUpIcon /> {onePost?.likes}
           </IconButton>
         </CardActions>
       </CardStyle>
