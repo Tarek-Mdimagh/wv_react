@@ -18,9 +18,11 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 // import { staticPosts } from '../../utils/fakePosts'
 import moment from 'moment'
 import CircularProgress from '@mui/material/CircularProgress'
+import { TextField } from '@mui/material'
 
 export default function Details() {
   const [postInfo, setPost] = useState()
+  const [comments, setComments] = useState(null)
   const [loading, setLoading] = useState(false)
 
   let { postID } = useParams()
@@ -38,6 +40,21 @@ export default function Details() {
     // eslint-disable-next-line
   }, [])
 
+  useEffect(() => {
+    setLoading((previous) => (previous = true))
+    fetch(
+      `https://dummyapi.io/data/v1/post/${postID}/comment`,
+      {
+        headers: { 'app-id': '627b956fb058dc4fa16fa1b9' },
+      },
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        setComments(json?.data)
+        setLoading((previous) => (previous = false))
+      })
+    // eslint-disable-next-line
+  }, [])
   return !loading ? (
     <Container maxWidth="lg">
       <Link to={`/`}>
@@ -103,6 +120,42 @@ export default function Details() {
             <ThumbUpIcon /> {postInfo?.likes}
           </IconButton>
         </CardActions>
+      </Box>
+      <Box>
+        <Typography variant="body2" color="text.secondary">
+          commentaires
+        </Typography>
+        {comments?.map((comment) => (
+          <CardHeader
+            sx={{
+              textAlign: 'left',
+              'border-top': '1px solid black',
+              ' border-bottom': '1px solid black',
+            }}
+            avatar={
+              <Avatar
+                sx={{ bgcolor: red[500] }}
+                aria-label="recipe"
+                src={comment?.owner?.picture}
+              />
+            }
+            title={comment?.message}
+            // subheader="September 14, 2016"
+            subheader={
+              moment(comment?.publishDate).isValid()
+                ? moment(comment?.publishDate).format('LLL')
+                : ' '
+            }
+          />
+        ))}
+
+        <TextField
+          sx={{ margin: 2 }}
+          fullWidth
+          id="outlined-basic"
+          label="Ajouter un comentaire"
+          variant="outlined"
+        />
       </Box>
     </Container>
   ) : (
