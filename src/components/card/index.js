@@ -13,7 +13,7 @@ import Stack from '@mui/material/Stack'
 import Chip from '@mui/material/Chip'
 import styled from '@emotion/styled'
 import { Link } from 'react-router-dom'
-import { staticPosts } from '../../utils/fakePosts'
+// import { staticPosts } from '../../utils/fakePosts'
 import moment from 'moment'
 
 const CardStyle = styled(Card)`
@@ -25,30 +25,30 @@ const CardStyle = styled(Card)`
   }
 `
 
-export default function RecipeReviewCard() {
-  const onePost = staticPosts.data[3]
+export default function RecipeReviewCard({ postInfo }) {
+  // const postInfo = staticPosts.data[3]
   return (
-    <Link to={`/details/${onePost.id}`}>
+    <Link to={`/details/${postInfo.id}`}>
       <CardStyle sx={{ maxWidth: 345 }}>
         <CardHeader
           avatar={
             <Avatar
               sx={{ bgcolor: red[500] }}
               aria-label="recipe"
-              src={onePost?.owner?.picture}
+              src={postInfo?.owner?.picture}
             />
           }
           title={
-            onePost?.owner?.title +
+            postInfo?.owner?.title +
             ' , ' +
-            onePost?.owner?.firstName +
+            postInfo?.owner?.firstName +
             ' ' +
-            onePost?.owner?.lastName
+            postInfo?.owner?.lastName
           }
           // subheader="September 14, 2016"
           subheader={
-            moment(onePost?.publishDate).isValid()
-              ? moment(onePost?.publishDate).format('LLL')
+            moment(postInfo?.publishDate).isValid()
+              ? moment(postInfo?.publishDate).format('LLL')
               : ' '
           }
         />
@@ -57,7 +57,7 @@ export default function RecipeReviewCard() {
           spacing={1}
           sx={{ padding: 2 }}
         >
-          {onePost?.tags?.map((tag, index) => (
+          {postInfo?.tags?.map((tag, index) => (
             <Chip
               key={index}
               label={tag}
@@ -70,7 +70,7 @@ export default function RecipeReviewCard() {
         <CardMedia
           component="img"
           height="194"
-          image={onePost?.image}
+          image={postInfo?.image}
           alt="Paella dish"
         />
         <CardContent>
@@ -78,12 +78,12 @@ export default function RecipeReviewCard() {
             variant="body2"
             color="text.secondary"
           >
-            {onePost?.text}
+            {postInfo?.text}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label="liks">
-            <ThumbUpIcon /> {onePost?.likes}
+            <ThumbUpIcon /> {postInfo?.likes}
           </IconButton>
         </CardActions>
       </CardStyle>
