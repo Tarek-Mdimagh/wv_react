@@ -5,10 +5,14 @@ import Details from './pages/details'
 function App() {
   return (
     <div className="App">
-      <h1>Welcome to React Router!</h1>
+      <h1>Welcome </h1>
       <Routes>
         <Route path="/" element={<Posts />} />
-        <Route path="details/:id" element={<Details />} />
+        <Route
+          path="details/:postID"
+          element={<Details />}
+        />
+        <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </div>
   )
