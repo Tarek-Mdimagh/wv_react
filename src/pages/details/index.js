@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import Card from '@mui/material/Card'
+// import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Container from '@mui/material/Container'
 import CardMedia from '@mui/material/CardMedia'
+import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import Avatar from '@mui/material/Avatar'
@@ -13,29 +14,34 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import Stack from '@mui/material/Stack'
 import Chip from '@mui/material/Chip'
 import styled from '@emotion/styled'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 // import { staticPosts } from '../../utils/fakePosts'
 import moment from 'moment'
 
-const CardStyle = styled(Card)`
+const CardStyle = styled(Box)`
   cursor: pointer;
 `
 
-export default function Details({ postId }) {
+export default function Details() {
   const [postInfo, setPost] = useState()
-  // let params = useParams();
+  let { postID } = useParams()
   //get post details whene page start rendering
   useEffect(() => {
-    fetch(`https://dummyapi.io/data/v1/post/${postId}`, {
+    fetch(`https://dummyapi.io/data/v1/post/${postID}`, {
       headers: { 'app-id': '627b956fb058dc4fa16fa1b9' },
     })
       .then((response) => response.json())
-      .then((json) => setPost(json.data))
+      .then((json) => setPost(json))
     // eslint-disable-next-line
   }, [])
   return (
     <Container maxWidth="lg">
-      <Link to={`/posts`}>Retour</Link>
+      <Link to={`/`}>
+        <KeyboardBackspaceIcon
+          sx={{ float: 'left', width: 60 }}
+        />
+      </Link>
       <CardStyle sx={{ maxWidth: '90%' }}>
         <CardHeader
           avatar={
@@ -79,6 +85,7 @@ export default function Details({ postId }) {
           height="194"
           image={postInfo?.image}
           alt="Paella dish"
+          sx={{ 'object-fit': 'contain' }}
         />
         <CardContent>
           <Typography
