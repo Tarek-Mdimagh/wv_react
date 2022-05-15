@@ -11,10 +11,20 @@ import { red } from '@mui/material/colors'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import Stack from '@mui/material/Stack'
 import Chip from '@mui/material/Chip'
+import styled from '@emotion/styled'
+
+const CardStyle = styled(Card)`
+  cursor: pointer;
+  :hover {
+    box-shadow: -2px 0px 26px -6px rgba(0, 0, 0, 0.81);
+    -webkit-box-shadow: -2px 0px 26px -6px rgba(0, 0, 0, 0.81);
+    -moz-box-shadow: -2px 0px 26px -6px rgba(0, 0, 0, 0.81);
+  }
+`
 
 export default function RecipeReviewCard() {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <CardStyle sx={{ maxWidth: 345 }}>
       <CardHeader
         avatar={
           <Avatar
@@ -63,6 +73,6 @@ export default function RecipeReviewCard() {
           <ThumbUpIcon /> 12
         </IconButton>
       </CardActions>
-    </Card>
+    </CardStyle>
   )
 }
