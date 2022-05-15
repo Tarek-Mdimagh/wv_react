@@ -8,7 +8,7 @@ function App() {
       <h1>Welcome to React Router!</h1>
       <Routes>
         <Route path="/" element={<Posts />} />
-        <Route path="about" element={<Details />} />
+        <Route path="details" element={<Details />} />
       </Routes>
     </div>
   )
