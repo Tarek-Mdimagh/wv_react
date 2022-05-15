@@ -13,36 +13,39 @@ import { red } from '@mui/material/colors'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import Stack from '@mui/material/Stack'
 import Chip from '@mui/material/Chip'
-import styled from '@emotion/styled'
 import { Link, useParams } from 'react-router-dom'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 // import { staticPosts } from '../../utils/fakePosts'
 import moment from 'moment'
-
-const CardStyle = styled(Box)`
-  cursor: pointer;
-`
+import CircularProgress from '@mui/material/CircularProgress'
 
 export default function Details() {
   const [postInfo, setPost] = useState()
+  const [loading, setLoading] = useState(false)
+
   let { postID } = useParams()
   //get post details whene page start rendering
   useEffect(() => {
+    setLoading((previous) => (previous = true))
     fetch(`https://dummyapi.io/data/v1/post/${postID}`, {
       headers: { 'app-id': '627b956fb058dc4fa16fa1b9' },
     })
       .then((response) => response.json())
-      .then((json) => setPost(json))
+      .then((json) => {
+        setPost(json)
+        setLoading((previous) => (previous = false))
+      })
     // eslint-disable-next-line
   }, [])
-  return (
+
+  return !loading ? (
     <Container maxWidth="lg">
       <Link to={`/`}>
         <KeyboardBackspaceIcon
           sx={{ float: 'left', width: 60 }}
         />
       </Link>
-      <CardStyle sx={{ maxWidth: '90%' }}>
+      <Box sx={{ maxWidth: '90%' }}>
         <CardHeader
           avatar={
             <Avatar
@@ -100,7 +103,9 @@ export default function Details() {
             <ThumbUpIcon /> {postInfo?.likes}
           </IconButton>
         </CardActions>
-      </CardStyle>
+      </Box>
     </Container>
+  ) : (
+    <CircularProgress />
   )
 }
