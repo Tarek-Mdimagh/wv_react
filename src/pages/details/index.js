@@ -19,11 +19,13 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 import moment from 'moment'
 import CircularProgress from '@mui/material/CircularProgress'
 import { TextField } from '@mui/material'
+import axios from 'axios'
 
 export default function Details() {
   const [postInfo, setPost] = useState()
   const [comments, setComments] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [commentInput, setCommentInput] = useState(null)
 
   let { postID } = useParams()
   //get post details whene page start rendering
@@ -39,7 +41,7 @@ export default function Details() {
       })
     // eslint-disable-next-line
   }, [])
-
+  //get list of comment by post
   useEffect(() => {
     setLoading((previous) => (previous = true))
     fetch(
@@ -55,6 +57,22 @@ export default function Details() {
       })
     // eslint-disable-next-line
   }, [])
+  const submitComment = (value) => {
+    setLoading((previous) => (previous = true))
+
+    // await axios({
+    //   method: 'post',
+    //   url: `https://dummyapi.io/data/v1/comment/create`,
+    //   body: {
+    //     message: value,
+    //     owner: '60d0fe4f5311236168a109ca',
+    //     post: postID,
+    //   },
+    //   headers: { 'app-id': '627b956fb058dc4fa16fa1b9' },
+    // }).then(function (response) {
+    //   console.log('---', response)
+    // })
+  }
   return !loading ? (
     <Container maxWidth="lg">
       <Link to={`/`}>
@@ -155,6 +173,12 @@ export default function Details() {
           id="outlined-basic"
           label="Ajouter un comentaire"
           variant="outlined"
+          onChange={(e) => setCommentInput(e.target.value)}
+          onKeyPress={(event) => {
+            if (event.key === 'Enter') {
+              submitComment(commentInput)
+            }
+          }}
         />
       </Box>
     </Container>
