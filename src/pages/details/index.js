@@ -43,6 +43,10 @@ export default function Details() {
   }, [])
   //get list of comment by post
   useEffect(() => {
+    getCommentList()
+    // eslint-disable-next-line
+  }, [])
+  const getCommentList = () => {
     setLoading((previous) => (previous = true))
     fetch(
       `https://dummyapi.io/data/v1/post/${postID}/comment`,
@@ -55,23 +59,44 @@ export default function Details() {
         setComments(json?.data)
         setLoading((previous) => (previous = false))
       })
-    // eslint-disable-next-line
-  }, [])
-  const submitComment = (value) => {
-    setLoading((previous) => (previous = true))
+  }
+  const submitComment = (value, event) => {
+    event.preventDefault()
 
-    // await axios({
-    //   method: 'post',
-    //   url: `https://dummyapi.io/data/v1/comment/create`,
-    //   body: {
-    //     message: value,
-    //     owner: '60d0fe4f5311236168a109ca',
-    //     post: postID,
-    //   },
-    //   headers: { 'app-id': '627b956fb058dc4fa16fa1b9' },
-    // }).then(function (response) {
-    //   console.log('---', response)
-    // })
+    axios
+      .post(
+        `https://dummyapi.io/data/v1/comment/create`,
+        {
+          message: value,
+          owner: '60d0fe4f5311236168a109ca',
+          post: postID,
+        },
+        {
+          headers: {
+            'app-id': '627b956fb058dc4fa16fa1b9',
+          },
+        },
+      )
+      .then((res) => {
+        getCommentList()
+        console.log(res)
+      })
+  }
+  const deleteComenet=(commmenet)=>{
+    axios
+    .delete(
+      `https://dummyapi.io/data/v1/comment/${commmenet}`,
+    
+      {
+        headers: {
+          'app-id': '627b956fb058dc4fa16fa1b9',
+        },
+      },
+    )
+    .then((res) => {
+      getCommentList()
+      console.log(res)
+    })
   }
   return !loading ? (
     <Container maxWidth="lg">
@@ -143,28 +168,48 @@ export default function Details() {
         <Typography variant="body2" color="text.secondary">
           commentaires
         </Typography>
-        {comments?.map((comment) => (
-          <CardHeader
+        {comments?.map((comment,index) => (
+          <Box key={index}  sx={{
+            position:"relative",
+          }}>
+            <CardHeader
+              sx={{
+                textAlign: 'left',
+                'border-top': '1px solid black',
+                ' border-bottom': '1px solid black',
+              }}
+              avatar={
+                <Avatar
+                  sx={{ bgcolor: red[500] }}
+                  aria-label="recipe"
+                  src={comment?.owner?.picture}
+                />
+              }
+              title={comment?.message}
+              // subheader="September 14, 2016"
+              subheader={
+                moment(comment?.publishDate).isValid()
+                  ? moment(comment?.publishDate).format(
+                      'LLL',
+                    )
+                  : ' '
+              }
+            ></CardHeader>
+            <Typography
+              hidden={comment.owner.id!=="60d0fe4f5311236168a109ca"}
             sx={{
-              textAlign: 'left',
-              'border-top': '1px solid black',
-              ' border-bottom': '1px solid black',
+              position:"absolute",
+              right:2,
+              top:2,
+              cursor:"pointer"
             }}
-            avatar={
-              <Avatar
-                sx={{ bgcolor: red[500] }}
-                aria-label="recipe"
-                src={comment?.owner?.picture}
-              />
-            }
-            title={comment?.message}
-            // subheader="September 14, 2016"
-            subheader={
-              moment(comment?.publishDate).isValid()
-                ? moment(comment?.publishDate).format('LLL')
-                : ' '
-            }
-          />
+              variant="body2"
+              color="secondary"
+              onClick={()=>deleteComenet(comment.id)}
+            >
+              Delete
+            </Typography>
+          </Box>
         ))}
 
         <TextField
@@ -176,7 +221,7 @@ export default function Details() {
           onChange={(e) => setCommentInput(e.target.value)}
           onKeyPress={(event) => {
             if (event.key === 'Enter') {
-              submitComment(commentInput)
+              submitComment(commentInput, event)
             }
           }}
         />
