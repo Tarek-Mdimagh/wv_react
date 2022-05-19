@@ -29,7 +29,14 @@ export default function RecipeReviewCard({ postInfo }) {
   // const postInfo = staticPosts.data[3]
   return (
     <Link to={`/details/${postInfo.id}`}>
-      <CardStyle sx={{ Width: 270  , height:500 }}>
+      <CardStyle
+        sx={{
+          minWidth: 270,
+          maxWidth: 270,
+          minHeight: 500,
+          maxHeight: 500,
+        }}
+      >
         <CardHeader
           avatar={
             <Avatar
